@@ -1,0 +1,3 @@
+#!/bin/bash
+export GOOGLE_APPLICATION_CREDENTIALS="Your path to Google Account json file."
+pipenv run python tweets_collector_service.py --twitter_config config/twitter_api.ini --bigquery_config config/bigquery.ini --start 2021-12-11 --end 2021-12-21

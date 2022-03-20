@@ -1,0 +1,20 @@
+[TwitterAuth]
+api_key = HvAmc63MkQlfL2JlXbiwPpawz
+api_key_secret = nDA4duEgXR69abK92ZEo5rk2m91bM06BWl4i4AYiud3F2XJEzB
+access_token = 1442185431710199820-LwBIREQGN28ydRGZ9HnWH3WzhBhU0P
+access_token_secret = SAGClF9w5xVXR5QANC2DZaUi9K4URu2YYcfqx9qvAAmtk
+bearer_token = AAAAAAAAAAAAAAAAAAAAAEh8ZgEAAAAAesLVtoOICYOq6NdU7laAmKcNvpI%3D3B99cXGhc12JBHtK5Eet6QE3SB2HrcCfOWPve308W1U2qL7emV
+
+[TwitterUrl]
+search = https://api.twitter.com/2/tweets/search/all
+count = https://api.twitter.com/2/tweets/counts/all
+
+[TwitterAPI]
+max_results = 500
+query = place_country:PH
+expansions = attachments.poll_ids,attachments.media_keys,author_id,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id
+tweet_fields = attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld
+user_fields = id,name,username,created_at,description,entities,location,public_metrics,url
+place_fields = id,full_name,country,country_code,geo,name,place_type
+media_fields = duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics,alt_text
+

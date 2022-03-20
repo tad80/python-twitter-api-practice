@@ -1,0 +1,5 @@
+[BigQuery]
+project_id = keio-sdm-masters-research
+dataset_id = tweets
+table_id = tweets_ph
+commit_offset = 1
