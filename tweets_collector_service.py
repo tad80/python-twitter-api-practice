@@ -20,6 +20,8 @@ class TweetsCollectorService:
         self.logger = Logger("./config/logger.ini", self.__class__.__name__)
         self.parser = ConfigParser(interpolation=None)
         self.parser.read(twitter_config)
+        self.bq_config = ConfigParser(interpolation=None)
+        self.bq_config.read(bigquery_config)
         start_time = datetime.strftime(datetime.strptime(start, "%Y-%m-%d"), "%Y-%m-%dT%H:%M:%SZ")
         end_time = datetime.strftime(datetime.strptime(end, "%Y-%m-%d"), "%Y-%m-%dT%H:%M:%SZ")
         self.twitter_params = {
@@ -46,12 +48,12 @@ class TweetsCollectorService:
         while go_ahead is True:
             response = self.twitter.call(self.parser["TwitterUrl"]["search"], self.twitter_params)
             self.logger.log.debug(response["data"])
-            rows = self.bq.load(response["data"], "tweets", "tweets_ph")
+            rows = self.bq.load(response["data"], self.bq_config["BigQuery"]["dataset_id"], self.bq_config["BigQuery"]["table_id"])
             self.logger.log.info("%s rows added to BigQuery" % rows)
-            if response["meta"]["next_token"] is not None:
-                self.twitter_params["next_token"] = response["meta"]["next_token"]
-            else:
+            if response["meta"]["next_token"] is None:
                 go_ahead = False
+            else:
+                self.twitter_params["next_token"] = response["meta"]["next_token"]
             time.sleep(3)
 
 

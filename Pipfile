@@ -13,6 +13,13 @@ pandas = "*"
 google-cloud-bigquery = "*"
 python-json-logger = "*"
 retry = "*"
+tensorflow = "==2.9.0rc0"
+tensorflow-hub = "*"
+tensorflow-datasets = "*"
+tensorflow-text = "==2.9.0rc0"
+tf-models-official = "*"
+nltk = "*"
+ipython = "*"
 
 [dev-packages]
 
