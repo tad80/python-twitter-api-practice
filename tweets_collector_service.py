@@ -50,7 +50,7 @@ class TweetsCollectorService:
             self.logger.log.debug(response["data"])
             rows = self.bq.load(response["data"], self.bq_config["BigQuery"]["dataset_id"], self.bq_config["BigQuery"]["table_id"])
             self.logger.log.info("%s rows added to BigQuery" % rows)
-            if response["meta"]["next_token"] is None:
+            if "next_token" not in response["meta"] or response["meta"]["next_token"] is None:
                 go_ahead = False
             else:
                 self.twitter_params["next_token"] = response["meta"]["next_token"]
