@@ -7,7 +7,7 @@ from libs.bigquery_client import BigQueryClient
 from libs.twitter_v2_client import TwitterV2Client
 
 
-class TweetsCollectorService:
+class TweetsCounterService:
     """
     Fetches tweets from Twitter v2 API and injests them to BigQuery
     """
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     PARSER.add_argument("--start", required=True, help="Start date. YYYY-MM-DD")
     PARSER.add_argument("--end", required=True, help="End date. YYYY-MM-DD")
     ARGS = PARSER.parse_args()
-    TweetsCollectorService(ARGS.twitter_config, ARGS.bigquery_config, ARGS.start, ARGS.end).main()
+    TweetsCounterService(ARGS.twitter_config, ARGS.bigquery_config, ARGS.start, ARGS.end).main()
