@@ -9,7 +9,7 @@ from libs.twitter_v2_client import TwitterV2Client
 
 class TweetsCollectorService:
     """
-    Fetches tweets from Twitter v2 API and injests them to BigQuery
+    Fetches tweets from Twitter v2 API and injests them into BigQuery
     """
 
 
@@ -45,16 +45,31 @@ class TweetsCollectorService:
         Main method
         """
         go_ahead = True
+        rows = []
         while go_ahead is True:
-            response = self.twitter.call(self.parser["TwitterUrl"]["search"], self.twitter_params)
+            try:
+                response = self.twitter.call(self.parser["TwitterUrl"]["search"], self.twitter_params)
+            except Exception as ex:
+                self.logger.log.error("Unexpected exception: %s %s", str(type(ex)), ex)
+                raise ex
+            if "data" not in response or response["data"] is None:
+                continue
             self.logger.log.debug(response["data"])
-            rows = self.bq.load(response["data"], self.bq_config["BigQuery"]["dataset_id"], self.bq_config["BigQuery"]["table_id"])
-            self.logger.log.info("%s rows added to BigQuery" % rows)
+            rows = rows + response["data"]
+            self.logger.log.info("buffered row count is %s" % len(rows))
             if "next_token" not in response["meta"] or response["meta"]["next_token"] is None:
+                if len(rows) > 0:
+                    loaded = self.bq.load(rows, self.bq_config["BigQuery"]["dataset_id"], self.bq_config["BigQuery"]["table_id"])
+                    self.logger.log.info("Total %s rows in %s" % (loaded, self.bq_config["BigQuery"]["table_id"]))
+                    self.logger.log.info("Loaded final rows")
                 go_ahead = False
             else:
+                if len(rows) >= 5000:
+                    loaded = self.bq.load(rows, self.bq_config["BigQuery"]["dataset_id"], self.bq_config["BigQuery"]["table_id"])
+                    self.logger.log.info("Total %s rows in %s" % (loaded, self.bq_config["BigQuery"]["table_id"]))
+                    rows = []
                 self.twitter_params["next_token"] = response["meta"]["next_token"]
-            time.sleep(3)
+            time.sleep(5)
 
 
 if __name__ == "__main__":

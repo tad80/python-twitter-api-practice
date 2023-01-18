@@ -1,6 +1,7 @@
 from configparser import ConfigParser
 from logging import getLogger
 import requests
+from retry import retry
 from libs.logger import Logger
 
 
@@ -29,6 +30,7 @@ class TwitterV2Client:
         return request
 
 
+    @retry(delay=60, tries=3)
     def call(self, url, params):
         """
         Makes call against Twtiter API v2
@@ -38,7 +40,7 @@ class TwitterV2Client:
         self.logger.log.info(response.headers)
         if response.status_code == 200:
             self.logger.log.info("%s %s" % (response.status_code, response.json()["meta"]))
+            return response.json()
         else:
             self.logger.log.info("%s %s %s" % (response.status_code, response.json()["title"], response.json()["detail"]))
             raise Exception(response.status_code, response.text)
-        return response.json()

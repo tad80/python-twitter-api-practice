@@ -24,6 +24,7 @@ class BigQueryClient:
         )
 
 
+    @retry(delay=5, tries=3)
     def load(self, json, dataset_id, table_id):
         """
         Wrapper of bigquery.load_table_from_json.
